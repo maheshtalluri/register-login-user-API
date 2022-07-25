@@ -61,7 +61,7 @@ app.post("/register", async (request, response) => {
       user (username, name, password, gender, location)
       VALUES
       (
-          "${username},
+          "${username}",
           "${name}",
           "${hashedPassword}",
           "${gender}",
@@ -81,3 +81,67 @@ app.post("/register", async (request, response) => {
     response.send("User already exists");
   }
 });
+
+// user Login API
+
+app.post("/login", async (request, response) => {
+  const { username, password } = request.body;
+
+  const getUserDetails = `
+    SELECT * FROM user WHERE username = "${username}";`;
+
+  const dbUser = await database.get(getUserDetails);
+
+  if (dbUser === undefined) {
+    response.status(400);
+    response.send("Invalid user");
+  } else {
+    const isPasswordMatched = await bcrypt.compare(password, dbUser.password);
+
+    if (isPasswordMatched === true) {
+      response.send("Login success!");
+    } else {
+      response.status(400);
+      response.send("Invalid password");
+    }
+  }
+});
+
+// Update password of the user
+
+app.put("/change-password", async (request, response) => {
+  const { username, oldPassword, newPassword } = request.body;
+
+  const selectUserQuery = `
+  SELECT 
+    * 
+  FROM 
+    user 
+  WHERE 
+    username = '${username}'`;
+
+  const dbUser = await database.get(selectUserQuery);
+
+  if (dbUser !== undefined) {
+    const isPassword = await bcrypt.compare(oldPassword, dbUser.password);
+
+    if (isPassword) {
+      if (validPassword(newPassword)) {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        const updatedPassword = `UPDATE user SET password = "${hashedPassword}" WHERE username = "${username}";`;
+
+        await database.get(updatedPassword);
+        response.send("Password updated");
+      } else {
+        response.status(400);
+        response.status("Password is too short");
+      }
+    } else {
+      response.status(400);
+      response.send("Invalid current password");
+    }
+  }
+});
+
+module.exports = app;
