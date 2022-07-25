@@ -2,9 +2,9 @@ POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-  "username": "maheshtalluri",
-  "name": "Mahesh Kumar Talluri",
-  "password": "mahesh369",
+  "username": "maheshtk",
+  "name": "random",
+  "password": "random123",
   "gender":   "male",
   "location": "Jaggayyapet"
 }
@@ -15,8 +15,8 @@ POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-  "username": "maheshtalluri",
-  "password": "mahesh159"
+  "username": "maheshtk",
+  "password": "random123"
 }
 
 ###
@@ -25,7 +25,7 @@ PUT http://localhost:3000/change-password
 Content-Type: application/json
 
 {
-  "username": "maheshtalluri",
-  "oldPassword": "mahesh753",
-  "newPassword": "mahesh159"
+  "username": "maheshtk",
+  "oldPassword": "pass123",
+  "newPassword": "pas"
 }

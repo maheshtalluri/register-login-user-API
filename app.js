@@ -135,7 +135,7 @@ app.put("/change-password", async (request, response) => {
         response.send("Password updated");
       } else {
         response.status(400);
-        response.status("Password is too short");
+        response.send("Password is too short");
       }
     } else {
       response.status(400);
